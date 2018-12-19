@@ -3,24 +3,34 @@
 
 void solveDay6()
 {
-    std::array<Point, GL_NUM> coords = fillInCoordsTest();
+    // fill in the initial array with the coordinates
+    std::array<Point, GL_NUM> coords = fillInCoords();
+    //printCoords(coords);
 
-    printCoords(coords);
+    // the coordinates outside of the seek-rectangle are irrelevant because they are sure to have infinite area
+    Rectangle seekRect = getSeekRect(coords);
+    //std::cout << seekRect << '\n';
+
+    // build up the grid covered by the seek rectangle
+    Grid grid(seekRect.p1, seekRect.p2);
+    //std::cout << grid << '\n';
+
+    grid.mapCoords(coords);
+    //grid.draw();
+
+
+    unsigned int addb = 11;
+    std::cout << addb << std::endl;
+
+
 
     getLargestArea(coords);
 }
 
-
 int getLargestArea(const std::array<Point, GL_NUM> &coords)
 {
-    // the coordinates outside of the seek-rectangle are irrelevant because they are sure to have infinite area
-    Rectangle seekRect = getSeekRect(coords);
 
-    Grid grid(seekRect.p1, seekRect.p2);
 
-    grid.draw();
-
-    std::cout << seekRect << std::endl;
 
     return 1;
 }
@@ -69,7 +79,7 @@ std::ostream& operator<<(std::ostream &out, const Point &p)
 
 std::ostream& operator<<(std::ostream &out, const Rectangle &r)
 {
-    out << r.p1 << '\n' << r.p2;
+    out << r.p1 << '\n' << r.p2 << '\n';
 
     return out;
 }
@@ -79,7 +89,74 @@ bool operator==(const Point &p1, const Point &p2)
     return (p1.x == p2.x && p1.y == p2.y);
 }
 
+int distance(const Point &p1, const Point &p2)
+{
+    // Manhattan-distance
+    return abs(p1.x - p2.x) + abs(p1.y - p2.y);
+}
+
+
+void Grid::initGrid()
+{
+    for (int idx {0}; idx < size(); ++idx)
+    {
+        points[idx].x = offset_x + (idx % width);
+        points[idx].y = offset_y + static_cast<int>(idx / width);
+    }
+}
+
+void Grid::mapCoords(std::array<Point, GL_NUM> &coords)
+{
+    for (int i {0}; i < size(); ++i)
+    {
+        int closestIdx {0};
+
+        for (int j {1}; j < GL_NUM; ++j)
+        {
+            if ( distance(points[i], coords[j]) < distance(points[i], coords[closestIdx]) )
+                closestIdx = j;
+
+            else if ( distance(points[i], coords[j]) == distance(points[i], coords[closestIdx]) )
+            {
+                closestIdx = -1;
+                break;
+            }
+        }
+        points[i].closestIdx = closestIdx;
+    }
+}
+
+
+void Grid::draw()
+{
+    for (int idx {0}; idx < size(); ++idx)
+    {
+        if ( points[idx].closestIdx != -1 )
+            std::cout << static_cast<char16_t>(points[idx].closestIdx) << ' ';
+        else
+            std::cout << '.' << ' ';
+
+        if ( (idx + 1) % width == 0 && idx > 0)
+            std::cout << '\n';
+    }
+}
+
+
+std::ostream& operator<<(std::ostream &out, const Grid &g)
+{
+    for (int idx {0}; idx < g.size(); ++idx)
+    {
+        out << g[idx] << ' ';
+
+        if ( (idx + 1) % g.width == 0 && idx > 0)
+            out << '\n';
+    }
+
+    return out;
+}
+
 /*
+
 std::array<Point, GL_NUM> fillInCoords()
 {
     std::array<Point, GL_NUM> coords {{
@@ -137,9 +214,10 @@ std::array<Point, GL_NUM> fillInCoords()
 
     return coords;
 }
+
 */
 
-std::array<Point, GL_NUM> fillInCoordsTest()
+std::array<Point, GL_NUM> fillInCoords()
 {
     std::array<Point, GL_NUM> coords {{
         {1, 1},
@@ -153,25 +231,3 @@ std::array<Point, GL_NUM> fillInCoordsTest()
     return coords;
 }
 
-void Grid::initGrid()
-{
-    for (int idx {0}; idx < size(); ++idx)
-    {
-        points[idx].x = offset_x + (idx % width);
-        points[idx].y = offset_y + static_cast<int>(idx / width);
-    }
-}
-
-
-void Grid::draw()
-{
-    for (int idx {0}; idx < size(); ++idx)
-    {
-        std::cout << points[idx] << ' ';
-
-        if ( (idx + 1) % width == 0 && idx > 0)
-            std:: cout << '\n';
-    }
-
-    std::cout << std::endl;
-}

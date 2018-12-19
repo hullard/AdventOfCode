@@ -5,8 +5,9 @@
 
 #include <iostream>
 #include <array>
+#include <cmath>
 
-// global variables/types
+// global variables / data types
 
 const unsigned int GL_NUM {6};
 
@@ -17,6 +18,15 @@ struct Point
 
     friend std::ostream& operator<<(std::ostream &out, const Point &p);
     friend bool operator==(const Point &p1, const Point &p2);
+    friend int distance(const Point &p1, const Point &p2);
+};
+
+// map the closest coordinate to the point
+struct PointMap : public Point
+{
+    int closestIdx;
+    PointMap(int idx = 0) : closestIdx(idx) {}
+    //operator Point() { return Point}
 };
 
 struct Rectangle
@@ -33,31 +43,33 @@ private:
     int offset_x, offset_y;
     int width, height;
 
-    Point *points;
+    PointMap *points;
     void initGrid();
 
 public:
     Grid(Point &p1, Point &p2) : offset_x(p1.x), offset_y(p1.y),
         width(p2.x - p1.x + 1), height(p2.y - p1.y + 1)
     {
-        points = new Point[width * height];
+        points = new PointMap[width * height];
 
         initGrid();
     }
 
-    int size() { return width * height; }
-    Point& operator[](int idx) { return points[idx]; }
-
+    void mapCoords(std::array<Point, GL_NUM> &coords);
     void draw();
+
+    int size() const { return width * height; }
+    PointMap& operator[](int idx) { return points[idx]; }
+    const PointMap& operator[](int idx) const { return points[idx]; }
+
+    friend std::ostream& operator<<(std::ostream &out, const Grid &g);
 };
 
 // function prototypes
 
 void solveDay6();
 
-//std::array<Point, GL_NUM> fillInCoords();
-
-std::array<Point, GL_NUM> fillInCoordsTest();
+std::array<Point, GL_NUM> fillInCoords();
 
 int getLargestArea(const std::array<Point, GL_NUM> &coords);
 

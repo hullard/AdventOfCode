@@ -31,10 +31,8 @@ struct PointMap : public Point
 
 struct Rectangle
 {
-    int x_min, x_max;
-    int y_min, y_max;
-    Rectangle(int x_min = 0, int x_max = 0, int y_min = 0, int y_max = 0) :
-        x_min(x_min), x_max(x_max), y_min(y_min), y_max(y_max) {}
+    Point p1, p2;
+    Rectangle(Point &p1, Point &p2) : p1(p1), p2(p2) {}
 };
 
 class Grid
@@ -57,6 +55,7 @@ public:
 
     void map(const std::array<Point, GL_NUM> &coords);
     void draw(const std::array<Point, GL_NUM> &coords);
+    bool isBoundary(int idx) const;
 
     int size() const { return width * height; }
     PointMap& operator[](int idx) { return points[idx]; }
@@ -73,15 +72,9 @@ std::array<Point, GL_NUM> fillInCoords();
 
 void printCoords(const std::array<Point, GL_NUM> &coords);
 
-Point getEndPoint(const std::array<Point, GL_NUM> &coords);
+Rectangle getSeekArea(const std::array<Point, GL_NUM> &coords);
 
-std::array<int, GL_NUM> calcAreas(const Grid &grid);
-
-Rectangle getBoundRect(const std::array<Point, GL_NUM> &coords);
-
-std::vector<int> getBoundPointIdx(const std::array<Point, GL_NUM> &coords);
-
-std::array<int, GL_NUM>& filterAreas(std::array<int, GL_NUM> &areas, const std::vector<int> &boundIdx);
+std::array<int, GL_NUM> calcFiniteAreas(const Grid &grid);
 
 template <typename T, int size>
 T getMax(const std::array<T, size> &numbers)

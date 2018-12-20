@@ -5,11 +5,12 @@
 
 #include <iostream>
 #include <array>
+#include <vector>
 #include <cmath>
 
 // global variables / data types
 
-const unsigned int GL_NUM {6};
+const unsigned int GL_NUM {50};
 
 struct Point
 {
@@ -26,15 +27,14 @@ struct PointMap : public Point
 {
     int closestIdx;
     PointMap(int idx = 0) : closestIdx(idx) {}
-    //operator Point() { return Point}
 };
 
 struct Rectangle
 {
-    Point p1, p2;
-    Rectangle(Point &p1, Point &p2) : p1(p1), p2(p2) {}
-
-    friend std::ostream& operator<<(std::ostream &out, const Rectangle &r);
+    int x_min, x_max;
+    int y_min, y_max;
+    Rectangle(int x_min = 0, int x_max = 0, int y_min = 0, int y_max = 0) :
+        x_min(x_min), x_max(x_max), y_min(y_min), y_max(y_max) {}
 };
 
 class Grid
@@ -55,8 +55,8 @@ public:
         initGrid();
     }
 
-    void mapCoords(std::array<Point, GL_NUM> &coords);
-    void draw();
+    void map(const std::array<Point, GL_NUM> &coords);
+    void draw(const std::array<Point, GL_NUM> &coords);
 
     int size() const { return width * height; }
     PointMap& operator[](int idx) { return points[idx]; }
@@ -71,10 +71,30 @@ void solveDay6();
 
 std::array<Point, GL_NUM> fillInCoords();
 
-int getLargestArea(const std::array<Point, GL_NUM> &coords);
-
-Rectangle getSeekRect(const std::array<Point, GL_NUM> &coords);
-
 void printCoords(const std::array<Point, GL_NUM> &coords);
 
-#endif DAY6_H
+Point getEndPoint(const std::array<Point, GL_NUM> &coords);
+
+std::array<int, GL_NUM> calcAreas(const Grid &grid);
+
+Rectangle getBoundRect(const std::array<Point, GL_NUM> &coords);
+
+std::vector<int> getBoundPointIdx(const std::array<Point, GL_NUM> &coords);
+
+std::array<int, GL_NUM>& filterAreas(std::array<int, GL_NUM> &areas, const std::vector<int> &boundIdx);
+
+template <typename T, int size>
+T getMax(const std::array<T, size> &numbers)
+{
+    T max { numbers[0] };
+
+    for (const auto &elem : numbers)
+    {
+        if ( elem > max )
+            max = elem;
+    }
+
+    return max;
+}
+
+#endif

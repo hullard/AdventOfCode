@@ -5,58 +5,104 @@ void solveDay6()
 {
     // fill in the initial array with the coordinates
     std::array<Point, GL_NUM> coords = fillInCoords();
-    //printCoords(coords);
+    printCoords(coords);
 
-    // the coordinates outside of the seek-rectangle are irrelevant because they are sure to have infinite area
-    Rectangle seekRect = getSeekRect(coords);
-    //std::cout << seekRect << '\n';
+    // the coordinates of start and end point
+    Point P_start = Point(0, 0);
+    Point P_end = getEndPoint(coords);
 
-    // build up the grid covered by the seek rectangle
-    Grid grid(seekRect.p1, seekRect.p2);
+    // build up the grid covered by the seek area
+    Grid grid(P_start, P_end);
     //std::cout << grid << '\n';
 
-    grid.mapCoords(coords);
-    //grid.draw();
+    grid.map(coords);
+    grid.draw(coords);
 
+    // calculate area sizes and set the area of the boundary points to 0
+    std::array<int, GL_NUM> size_area = calcAreas(grid);
 
-    unsigned int addb = 11;
-    std::cout << addb << std::endl;
+    std::vector<int> boundIdx = getBoundPointIdx(coords);
 
+    std::array<int, GL_NUM> size_area_filtered = filterAreas(size_area, boundIdx);
 
-
-    getLargestArea(coords);
+    // select the largest area size
+    std::cout << '\n' << "LARGEST AREA: " << getMax<int, GL_NUM>(size_area_filtered) << '\n';
 }
 
-int getLargestArea(const std::array<Point, GL_NUM> &coords)
+std::array<int, GL_NUM> calcAreas(const Grid &grid)
 {
+    std::array<int, GL_NUM> sum;
+    sum.fill(0);
 
-
-
-    return 1;
+    for ( int point {0}; point < grid.size(); ++point)
+    {
+        if ( grid[point].closestIdx != -1 )
+            sum[grid[point].closestIdx] += 1;
+    }
+    return sum;
 }
 
-// the seekmap is defined by the four boundary points: get the left/up and right/down corners
-Rectangle getSeekRect(const std::array<Point, GL_NUM> &coords)
+std::vector<int> getBoundPointIdx(const std::array<Point, GL_NUM> &coords)
 {
-    Point P_start = coords[0];
-    Point P_end = P_start;
+    std::vector<int> pointIdx;
+    Rectangle bound = getBoundRect(coords);
+
+    for (unsigned idx {0}; idx < coords.size(); ++idx)
+    {
+        if (    coords[idx].x <= bound.x_min || coords[idx].x >= bound.x_max ||
+                coords[idx].y <= bound.y_min || coords[idx].y >= bound.y_max    )
+        {
+            pointIdx.push_back(idx);
+        }
+    }
+    return pointIdx;
+}
+
+
+Rectangle getBoundRect(const std::array<Point, GL_NUM> &coords)
+{
+    Rectangle b(coords[0].x, coords[0].y, coords[0].x, coords[0].y);
+
+    for (unsigned idx {0}; idx < coords.size(); ++idx)
+    {
+        if ( coords[idx].x < b.x_min )
+            b.x_min = coords[idx].x;
+
+        if ( coords[idx].x > b.x_max )
+            b.x_max = coords[idx].x;
+
+        if ( coords[idx].y < b.y_min )
+            b.y_min = coords[idx].y;
+
+        if ( coords[idx].y > b.y_max )
+            b.y_max = coords[idx].y;
+    }
+
+    return b;
+}
+
+
+std::array<int, GL_NUM>& filterAreas(std::array<int, GL_NUM> &areas, const std::vector<int> &boundIdx)
+{
+    for (const auto &idx : boundIdx)
+        areas[idx] = 0;
+
+    return areas;
+}
+
+
+Point getEndPoint(const std::array<Point, GL_NUM> &coords)
+{
+    int max_xy {0};
 
     for (const auto &coord : coords)
     {
-        // find the left/up corner
-        if (coord.x < P_start.x)
-            P_start.x = coord.x;
-        if (coord.y < P_start.y)
-            P_start.y = coord.y;
-
-        // find the right/down corner
-        if (coord.x > P_end.x)
-            P_end.x = coord.x;
-        if (coord.y > P_end.y)
-            P_end.y = coord.y;
+        // find the most right/down corner
+        if ( coord.x > max_xy || coord.y > max_xy )
+            max_xy = coord.x > coord.y ? coord.x : coord.y;
     }
 
-    return Rectangle(P_start, P_end);
+    return Point(max_xy, max_xy);
 }
 
 
@@ -72,14 +118,6 @@ void printCoords(const std::array<Point, GL_NUM> &coords)
 std::ostream& operator<<(std::ostream &out, const Point &p)
 {
     out << "(" << p.x << ", " << p.y << ")";
-
-    return out;
-}
-
-
-std::ostream& operator<<(std::ostream &out, const Rectangle &r)
-{
-    out << r.p1 << '\n' << r.p2 << '\n';
 
     return out;
 }
@@ -105,34 +143,45 @@ void Grid::initGrid()
     }
 }
 
-void Grid::mapCoords(std::array<Point, GL_NUM> &coords)
+void Grid::map(const std::array<Point, GL_NUM> &coords)
 {
     for (int i {0}; i < size(); ++i)
     {
-        int closestIdx {0};
+        unsigned closestIdx {0};
 
-        for (int j {1}; j < GL_NUM; ++j)
+        for (unsigned j {1}; j < GL_NUM; ++j)
         {
             if ( distance(points[i], coords[j]) < distance(points[i], coords[closestIdx]) )
                 closestIdx = j;
+        }
 
-            else if ( distance(points[i], coords[j]) == distance(points[i], coords[closestIdx]) )
+        for (unsigned j {0}; j < GL_NUM; ++j)
+        {
+            if ( j == closestIdx ) continue;
+
+            if ( distance(points[i], coords[j]) == distance(points[i], coords[closestIdx]) )
             {
                 closestIdx = -1;
                 break;
             }
         }
+
         points[i].closestIdx = closestIdx;
     }
 }
 
 
-void Grid::draw()
+void Grid::draw(const std::array<Point, GL_NUM> &coords)
 {
     for (int idx {0}; idx < size(); ++idx)
     {
         if ( points[idx].closestIdx != -1 )
-            std::cout << static_cast<char16_t>(points[idx].closestIdx) << ' ';
+        {
+            if ( points[idx] == coords[points[idx].closestIdx] )
+                std::cout << static_cast<char>(points[idx].closestIdx + 65) << ' ';
+            else
+                std::cout << static_cast<char>(points[idx].closestIdx + 97) << ' ';
+        }
         else
             std::cout << '.' << ' ';
 
@@ -216,6 +265,7 @@ std::array<Point, GL_NUM> fillInCoords()
 }
 
 */
+
 
 std::array<Point, GL_NUM> fillInCoords()
 {

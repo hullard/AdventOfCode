@@ -1,5 +1,5 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef _COMMON_H
+#define _COMMON_H
 
 #include <iostream>
 #include <fstream>
@@ -37,4 +37,4 @@ void printArray(const std::array<T, size> &array)
     std::cout << std::endl;
 }
 
-#endif // COMMON_H
+#endif // _COMMON_H

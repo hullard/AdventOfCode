@@ -1,5 +1,5 @@
 #include "day1.h"
-#include "common.h"
+#include "_common.h"
 
 void solveDay1()
 {

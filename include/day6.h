@@ -10,7 +10,8 @@
 
 // global variables / data types
 
-const unsigned int GL_NUM {6};
+const unsigned int GL_NUM {50};
+const unsigned int GL_TOT_DIST {10000};
 
 struct Point
 {
@@ -59,7 +60,7 @@ public:
     void mapTotalDist(const std::array<Point, GL_NUM> &coords);
     void drawClosestIdx() const;
     void drawTotalDist() const;
-    bool isBoundary(int idx) const;
+    bool isBoundaryPoint(int idx) const;
 
     inline int size() const { return width * height; }
     inline PointMap& operator[](int idx) { return points[idx]; }
@@ -79,6 +80,8 @@ void printCoords(const std::array<Point, GL_NUM> &coords);
 Rectangle getSeekArea(const std::array<Point, GL_NUM> &coords);
 
 std::array<int, GL_NUM> calcFiniteAreas(const Grid &grid);
+
+int getRegionSize(const Grid &grid);
 
 template <typename T, int size>
 T getMax(const std::array<T, size> &numbers)

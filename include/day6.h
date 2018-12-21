@@ -10,7 +10,7 @@
 
 // global variables / data types
 
-const unsigned int GL_NUM {50};
+const unsigned int GL_NUM {6};
 
 struct Point
 {
@@ -22,11 +22,13 @@ struct Point
     friend int distance(const Point &p1, const Point &p2);
 };
 
-// map the closest coordinate to the point
+// map the closest coordinate & total distance to the point
 struct PointMap : public Point
 {
     int closestIdx;
-    PointMap(int idx = 0) : closestIdx(idx) {}
+    int totalDist;
+    PointMap(int closestIdx = 0, int totalDist = 0) :
+        closestIdx(closestIdx), totalDist(totalDist) {}
 };
 
 struct Rectangle
@@ -53,13 +55,15 @@ public:
         initGrid();
     }
 
-    void map(const std::array<Point, GL_NUM> &coords);
-    void draw(const std::array<Point, GL_NUM> &coords);
+    void mapClosestIdx(const std::array<Point, GL_NUM> &coords);
+    void mapTotalDist(const std::array<Point, GL_NUM> &coords);
+    void drawClosestIdx() const;
+    void drawTotalDist() const;
     bool isBoundary(int idx) const;
 
-    int size() const { return width * height; }
-    PointMap& operator[](int idx) { return points[idx]; }
-    const PointMap& operator[](int idx) const { return points[idx]; }
+    inline int size() const { return width * height; }
+    inline PointMap& operator[](int idx) { return points[idx]; }
+    inline const PointMap& operator[](int idx) const { return points[idx]; }
 
     friend std::ostream& operator<<(std::ostream &out, const Grid &g);
 };

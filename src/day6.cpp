@@ -14,8 +14,8 @@ void solveDay6()
     Grid grid(seekArea.p1, seekArea.p2);
     //std::cout << grid << '\n';
 
-    grid.map(coords);
-    //grid.draw(coords);
+    grid.mapClosestIdx(coords);
+    grid.drawClosestIdx();
 
     // calculate area sizes and set the area of the boundary points to 0
     std::array<int, GL_NUM> area_sizes = calcFiniteAreas(grid);
@@ -31,17 +31,13 @@ std::array<int, GL_NUM> calcFiniteAreas(const Grid &grid)
 
     // calculate each area size within the grid
     for ( int point {0}; point < grid.size(); ++point)
-    {
         if ( grid[point].closestIdx != -1 )
             area_sizes[grid[point].closestIdx] += 1;
-    }
 
     // set the ones, wich are on the boundary to zero
     for ( int point {0}; point < grid.size(); ++point)
-    {
         if ( grid.isBoundary(point) )
             area_sizes[grid[point].closestIdx] = 0;
-    }
 
     return area_sizes;
 }
@@ -103,17 +99,15 @@ void Grid::initGrid()
     }
 }
 
-void Grid::map(const std::array<Point, GL_NUM> &coords)
+void Grid::mapClosestIdx(const std::array<Point, GL_NUM> &coords)
 {
     for (int i {0}; i < size(); ++i)
     {
         unsigned closestIdx {0};
 
         for (unsigned j {1}; j < GL_NUM; ++j)
-        {
             if ( distance(points[i], coords[j]) < distance(points[i], coords[closestIdx]) )
                 closestIdx = j;
-        }
 
         for (unsigned j {0}; j < GL_NUM; ++j)
         {
@@ -131,26 +125,24 @@ void Grid::map(const std::array<Point, GL_NUM> &coords)
 }
 
 
-void Grid::draw(const std::array<Point, GL_NUM> &coords)
+void Grid::drawClosestIdx() const
 {
     for (int idx {0}; idx < size(); ++idx)
     {
         if ( points[idx].closestIdx != -1 )
-        {
-        /*
-            if ( points[idx] == coords[points[idx].closestIdx] )
-                std::cout << static_cast<char>(points[idx].closestIdx + 65) << ' ';
-            else
-                std::cout << static_cast<char>(points[idx].closestIdx + 97) << ' ';
-        */
             std::cout << points[idx].closestIdx << ' ';
-        }
         else
             std::cout << '.' << ' ';
 
         if ( (idx + 1) % width == 0)
             std::cout << '\n';
     }
+}
+
+
+void Grid::drawTotalDist() const
+{
+
 }
 
 bool Grid::isBoundary(int idx) const
@@ -160,7 +152,6 @@ bool Grid::isBoundary(int idx) const
         return true;
     else
         return false;
-
 }
 
 std::ostream& operator<<(std::ostream &out, const Grid &g)
@@ -176,7 +167,7 @@ std::ostream& operator<<(std::ostream &out, const Grid &g)
     return out;
 }
 
-
+/*
 std::array<Point, GL_NUM> fillInCoords()
 {
     std::array<Point, GL_NUM> coords {{
@@ -234,8 +225,8 @@ std::array<Point, GL_NUM> fillInCoords()
 
     return coords;
 }
+*/
 
-/*
 
 std::array<Point, GL_NUM> fillInCoords()
 {
@@ -250,4 +241,4 @@ std::array<Point, GL_NUM> fillInCoords()
 
     return coords;
 }
-*/
+

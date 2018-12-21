@@ -96,4 +96,4 @@ T getMax(const std::array<T, size> &numbers)
     return max;
 }
 
-#endif
+#endif // DAY6_H

@@ -3,7 +3,10 @@
 
 // include libraries
 #include <iostream>
+#include <string>
+#include <iterator>
 #include <array>
+#include <algorithm>
 
 // global variables / data types
 const int GL_SIZE {250};

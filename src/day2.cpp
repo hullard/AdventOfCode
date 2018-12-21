@@ -16,6 +16,31 @@ void solveDay2()
 
 int makeCheckSum(std::array<std::string, GL_SIZE> &strings)
 {
+    int num_2Letter {0}, num_3Letter {0};
 
-    return 0;
+    for (const auto &str : strings)
+    {
+        std::array<unsigned, 256> num_chars;
+        num_chars.fill(0);
+
+        // count the letters in an array indexed by ASCI codes
+        for (std::string::const_iterator itr = str.begin(); itr != str.end(); ++itr)
+        {
+            uint8_t asci_code = static_cast<uint8_t>(*itr);
+            num_chars[asci_code] += 1;
+        }
+
+        // detect double and triple letter occurances (each counts only once!)
+        bool count_2Letter {false}, count_3Letter {false};
+        for (unsigned idx {0}; idx < 256; ++idx)
+        {
+            if (num_chars[idx] == 2) { count_2Letter = true; }
+            if (num_chars[idx] == 3) { count_3Letter = true; }
+        }
+
+        if (count_2Letter) { num_2Letter += 1; }
+        if (count_3Letter) { num_3Letter += 1; }
+    }
+
+    return num_2Letter * num_3Letter;
 }

@@ -1,8 +1,10 @@
+#include "day1.h"
+
 #include "day6.h"
 
 int main()
 {
-    solveDay6();
+    solveDay1();
 
     return 0;
 }

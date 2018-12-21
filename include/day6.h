@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <array>
-#include <vector>
 #include <cmath>
 
 // global variables / data types

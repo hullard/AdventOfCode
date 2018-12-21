@@ -10,5 +10,8 @@ void solveDay1()
 
     std::cout << '\n';
     std::cout << "RESULTING FREQUENCY: " << sumUp<int, GL_SIZE>(numbers) << std::endl;
+
+    std::cout << '\n';
+    std::cout << "FIRST DUPLICATED FREQUENCY: " << getFirstDuplFreq<int, GL_SIZE>(numbers) << std::endl;
 }
 

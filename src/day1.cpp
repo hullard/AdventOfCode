@@ -1,11 +1,10 @@
 #include "day1.h"
-#include "_common.h"
 
 void solveDay1()
 {
     std::cout << "Day1 has started!" << '\n';
 
-    std::array<int, GL_SIZE> numbers = readFile<int, GL_SIZE>("numbers.txt");
+    std::array<int, GL_SIZE> numbers = readFile<int, GL_SIZE>("day1.txt");
 
     //printArray<int, GL_SIZE>(numbers);
 

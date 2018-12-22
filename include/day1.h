@@ -7,6 +7,8 @@
 #include <array>
 #include <vector>
 
+#include "_common.h"
+
 // global variables / data types
 const unsigned int GL_SIZE {1025};
 

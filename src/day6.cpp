@@ -1,5 +1,4 @@
 #include "day6.h"
-#include "_common.h"
 
 void solveDay6()
 {
@@ -12,7 +11,7 @@ void solveDay6()
     Rectangle seekArea = getSeekArea(coords);
 
     // build up the grid covered by the seek area
-    Grid grid(seekArea.p1, seekArea.p2);
+    Grid grid(seekArea);
     //std::cout << grid << '\n';
 
     grid.mapClosestIdx(coords);
@@ -40,12 +39,12 @@ std::array<int, GL_NUM> calcFiniteAreas(const Grid &grid)
     area_sizes.fill(0);
 
     // calculate each area size within the grid
-    for ( int idx {0}; idx < grid.size(); ++idx)
+    for ( unsigned idx {0}; idx < grid.size(); ++idx)
         if ( grid[idx].closestIdx != -1 )
             area_sizes[grid[idx].closestIdx] += 1;
 
     // set the ones, wich are on the boundary to zero
-    for ( int idx {0}; idx < grid.size(); ++idx)
+    for ( unsigned idx {0}; idx < grid.size(); ++idx)
         if ( grid.isBoundaryPoint(idx) )
             area_sizes[grid[idx].closestIdx] = 0;
 
@@ -57,7 +56,7 @@ int getRegionSize(const Grid &grid)
 {
     int regionSize {0};
 
-    for (int idx {0}; idx < grid.size(); ++idx)
+    for (unsigned idx {0}; idx < grid.size(); ++idx)
         if (grid[idx].totalDist < GL_TOT_DIST)
             ++regionSize;
 
@@ -92,29 +91,9 @@ void printCoords(const std::array<Point, GL_NUM> &coords)
     std::cout << std::endl;
 }
 
-
-std::ostream& operator<<(std::ostream &out, const Point &p)
-{
-    out << "(" << p.x << ", " << p.y << ")";
-
-    return out;
-}
-
-bool operator==(const Point &p1, const Point &p2)
-{
-    return (p1.x == p2.x && p1.y == p2.y);
-}
-
-int distance(const Point &p1, const Point &p2)
-{
-    // Manhattan-distance
-    return abs(p1.x - p2.x) + abs(p1.y - p2.y);
-}
-
-
 void Grid::initGrid()
 {
-    for (int idx {0}; idx < size(); ++idx)
+    for (unsigned idx {0}; idx < size(); ++idx)
     {
         points[idx].x = offset_x + (idx % width);
         points[idx].y = offset_y + static_cast<int>(idx / width);
@@ -123,7 +102,7 @@ void Grid::initGrid()
 
 void Grid::mapClosestIdx(const std::array<Point, GL_NUM> &coords)
 {
-    for (int i {0}; i < size(); ++i)
+    for (unsigned i {0}; i < size(); ++i)
     {
         unsigned closestIdx {0};
 
@@ -148,14 +127,14 @@ void Grid::mapClosestIdx(const std::array<Point, GL_NUM> &coords)
 
 void Grid::mapTotalDist(const std::array<Point, GL_NUM> &coords)
 {
-    for (int i {0}; i < size(); ++i)
+    for (unsigned i {0}; i < size(); ++i)
         for (unsigned idx {0}; idx < GL_NUM; ++idx)
             points[i].totalDist += distance(points[i], coords[idx]);
 }
 
 void Grid::drawClosestIdx() const
 {
-    for (int idx {0}; idx < size(); ++idx)
+    for (unsigned idx {0}; idx < size(); ++idx)
     {
         if ( points[idx].closestIdx != -1 )
             std::cout << points[idx].closestIdx << ' ';
@@ -169,7 +148,7 @@ void Grid::drawClosestIdx() const
 
 void Grid::drawTotalDist() const
 {
-    for (int idx {0}; idx < size(); ++idx)
+    for (unsigned idx {0}; idx < size(); ++idx)
     {
         if ( points[idx].totalDist )
             std::cout << points[idx].totalDist << ' ';
@@ -193,7 +172,7 @@ bool Grid::isBoundaryPoint(int idx) const
 
 std::ostream& operator<<(std::ostream &out, const Grid &g)
 {
-    for (int idx {0}; idx < g.size(); ++idx)
+    for (unsigned idx {0}; idx < g.size(); ++idx)
     {
         out << g[idx] << ' ';
 

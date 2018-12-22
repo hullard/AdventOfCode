@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <exception>
 
+#include "_common.h"
+
 // global variables / data types
 const int GL_SIZE {250};
 

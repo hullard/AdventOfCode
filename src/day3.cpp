@@ -1,5 +1,4 @@
 #include "day3.h"
-#include "_common.h"
 
 void solveDay3()
 {

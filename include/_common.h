@@ -51,5 +51,24 @@ T getMax(const std::array<T, size> &numbers)
     return max;
 }
 
+struct Point
+{
+    int x, y;
+    Point(int x = 0, int y = 0) : x(x), y(y) {}
+
+    friend std::ostream& operator<<(std::ostream &out, const Point &p);
+    friend bool operator==(const Point &p1, const Point &p2);
+    friend int distance(const Point &p1, const Point &p2);
+};
+
+struct Rectangle
+{
+    int offset_x, offset_y;
+    int width, height;
+
+    Rectangle(Point &p1, Point &p2) : offset_x(p1.x), offset_y(p1.y),
+        width(p2.x - p1.x + 1), height(p2.y - p1.y + 1) {}
+};
+
 
 #endif // _COMMON_H

@@ -82,18 +82,4 @@ std::array<int, GL_NUM> calcFiniteAreas(const Grid &grid);
 
 int getRegionSize(const Grid &grid);
 
-template <typename T, int size>
-T getMax(const std::array<T, size> &numbers)
-{
-    T max { numbers[0] };
-
-    for (const auto &elem : numbers)
-    {
-        if ( elem > max )
-            max = elem;
-    }
-
-    return max;
-}
-
 #endif // DAY6_H

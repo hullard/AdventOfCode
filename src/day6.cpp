@@ -1,8 +1,9 @@
 #include "day6.h"
-
+#include "_common.h"
 
 void solveDay6()
 {
+    std::cout << "Day6 has started!" << '\n';
     // fill in the initial array with the coordinates
     std::array<Point, GL_NUM> coords = fillInCoords();
     printCoords(coords);

@@ -11,7 +11,7 @@ void solveDay6()
     Rectangle seekArea = getSeekArea(coords);
 
     // build up the grid covered by the seek area
-    Grid grid(seekArea);
+    day6::Grid grid(seekArea);
     //std::cout << grid << '\n';
 
     grid.mapClosestIdx(coords);
@@ -33,7 +33,83 @@ void solveDay6()
 }
 
 
-std::array<int, GL_NUM> calcFiniteAreas(const Grid &grid)
+std::array<Point, GL_NUM> fillInCoords()
+{
+    std::array<Point, GL_NUM> coords {{
+        {177, 51},
+        {350, 132},
+        {276, 139},
+        {249, 189},
+        {225, 137},
+        {337, 354},
+        {270, 147},
+        {182, 329},
+        {118, 254},
+        {174, 280},
+        {42, 349},
+        {96, 341},
+        {236, 46},
+        {84, 253},
+        {292, 143},
+        {253, 92},
+        {224, 137},
+        {209, 325},
+        {243, 195},
+        {208, 337},
+        {197, 42},
+        {208, 87},
+        {45, 96},
+        {64, 295},
+        {266, 248},
+        {248, 298},
+        {194, 261},
+        {157, 74},
+        {52, 248},
+        {243, 201},
+        {242, 178},
+        {140, 319},
+        {69, 270},
+        {314, 302},
+        {209, 212},
+        {237, 217},
+        {86, 294},
+        {295, 144},
+        {248, 206},
+        {157, 118},
+        {155, 146},
+        {331, 40},
+        {247, 302},
+        {250, 95},
+        {193, 214},
+        {345, 89},
+        {183, 206},
+        {121, 169},
+        {79, 230},
+        {88, 155}
+    }};
+
+    return coords;
+}
+
+/*
+
+std::array<Point, GL_NUM> fillInCoords()
+{
+    std::array<Point, GL_NUM> coords {{
+        {1, 1},
+        {1, 6},
+        {8, 3},
+        {3, 4},
+        {5, 5},
+        {8, 9}
+    }};
+
+    return coords;
+}
+
+*/
+
+std::array<int, GL_NUM> calcFiniteAreas(const day6::Grid &grid)
 {
     std::array<int, GL_NUM> area_sizes;
     area_sizes.fill(0);
@@ -52,7 +128,7 @@ std::array<int, GL_NUM> calcFiniteAreas(const Grid &grid)
 }
 
 
-int getRegionSize(const Grid &grid)
+int getRegionSize(const day6::Grid &grid)
 {
     int regionSize {0};
 
@@ -90,6 +166,8 @@ void printCoords(const std::array<Point, GL_NUM> &coords)
 
     std::cout << std::endl;
 }
+
+namespace day6 {
 
 void Grid::initGrid()
 {
@@ -183,79 +261,4 @@ std::ostream& operator<<(std::ostream &out, const Grid &g)
     return out;
 }
 
-
-std::array<Point, GL_NUM> fillInCoords()
-{
-    std::array<Point, GL_NUM> coords {{
-        {177, 51},
-        {350, 132},
-        {276, 139},
-        {249, 189},
-        {225, 137},
-        {337, 354},
-        {270, 147},
-        {182, 329},
-        {118, 254},
-        {174, 280},
-        {42, 349},
-        {96, 341},
-        {236, 46},
-        {84, 253},
-        {292, 143},
-        {253, 92},
-        {224, 137},
-        {209, 325},
-        {243, 195},
-        {208, 337},
-        {197, 42},
-        {208, 87},
-        {45, 96},
-        {64, 295},
-        {266, 248},
-        {248, 298},
-        {194, 261},
-        {157, 74},
-        {52, 248},
-        {243, 201},
-        {242, 178},
-        {140, 319},
-        {69, 270},
-        {314, 302},
-        {209, 212},
-        {237, 217},
-        {86, 294},
-        {295, 144},
-        {248, 206},
-        {157, 118},
-        {155, 146},
-        {331, 40},
-        {247, 302},
-        {250, 95},
-        {193, 214},
-        {345, 89},
-        {183, 206},
-        {121, 169},
-        {79, 230},
-        {88, 155}
-    }};
-
-    return coords;
 }
-
-/*
-
-std::array<Point, GL_NUM> fillInCoords()
-{
-    std::array<Point, GL_NUM> coords {{
-        {1, 1},
-        {1, 6},
-        {8, 3},
-        {3, 4},
-        {5, 5},
-        {8, 9}
-    }};
-
-    return coords;
-}
-
-*/

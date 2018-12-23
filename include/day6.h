@@ -14,18 +14,20 @@
 const int GL_NUM {50};
 const int GL_TOT_DIST {10000};
 
-
-// map the closest coordinate & total distance to the point
-struct PointMap : public Point
-{
-    int closestIdx;
-    int totalDist;
-    PointMap(int closestIdx = 0, int totalDist = 0) :
-        closestIdx(closestIdx), totalDist(totalDist) {}
-};
+namespace day6 {
 
 class Grid : public Rectangle
 {
+public:
+    // map the closest coordinate & total distance to the point
+    struct PointMap : public Point
+    {
+        int closestIdx;
+        int totalDist;
+        PointMap(int closestIdx = 0, int totalDist = 0) :
+            closestIdx(closestIdx), totalDist(totalDist) {}
+    };
+
 private:
     PointMap *points;
     void initGrid();
@@ -50,6 +52,8 @@ public:
     friend std::ostream& operator<<(std::ostream &out, const Grid &g);
 };
 
+}
+
 // function prototypes
 
 void solveDay6();
@@ -60,8 +64,8 @@ void printCoords(const std::array<Point, GL_NUM> &coords);
 
 Rectangle getSeekArea(const std::array<Point, GL_NUM> &coords);
 
-std::array<int, GL_NUM> calcFiniteAreas(const Grid &grid);
+std::array<int, GL_NUM> calcFiniteAreas(const day6::Grid &grid);
 
-int getRegionSize(const Grid &grid);
+int getRegionSize(const day6::Grid &grid);
 
 #endif // DAY6_H

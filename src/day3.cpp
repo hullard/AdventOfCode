@@ -4,10 +4,12 @@ void solveDay3()
 {
     std::cout << "Day3 has started!" << '\n';
 
-    std::vector<Claim> claims = readFile<Claim>("day3.txt");
+    std::vector<day3::Claim> claims = readFile<day3::Claim>("day3.txt");
 
-    printVector<Claim>(claims);
+    printVector<day3::Claim>(claims);
 }
+
+namespace day3 {
 
 std::ostream& operator<<(std::ostream &out, const Claim &c)
 {
@@ -34,5 +36,27 @@ std::istream& operator>>(std::istream &in, Claim &c)
     return in;
 }
 
+void Grid::initGrid()
+{
+    for (unsigned idx {0}; idx < size(); ++idx)
+    {
+        points[idx].x = offset_x + (idx % width);
+        points[idx].y = offset_y + static_cast<int>(idx / width);
+    }
+}
 
+void Grid::drawOverlap() const
+{
+    for (unsigned idx {0}; idx < size(); ++idx)
+    {
+        if ( points[idx].overlap )
+            std::cout << 'X';
+        else
+            std::cout << ' ';
 
+        if ( (idx + 1) % width == 0)
+            std::cout << '\n';
+    }
+}
+
+}

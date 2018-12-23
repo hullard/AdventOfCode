@@ -52,6 +52,8 @@ public:
     friend std::ostream& operator<<(std::ostream &out, const Grid &g);
 };
 
+Rectangle getGridArea(const std::array<Point, GL_NUM> &coords);
+
 }
 
 // function prototypes
@@ -61,8 +63,6 @@ void solveDay6();
 std::array<Point, GL_NUM> fillInCoords();
 
 void printCoords(const std::array<Point, GL_NUM> &coords);
-
-Rectangle getSeekArea(const std::array<Point, GL_NUM> &coords);
 
 std::array<int, GL_NUM> calcFiniteAreas(const day6::Grid &grid);
 

@@ -10,14 +10,15 @@
 
 // global variables / data types
 
-namespace day3 {
-
 struct Claim : Rectangle
 {
     unsigned ID;
     friend std::ostream& operator<<(std::ostream &out, const Claim &c);
     friend std::istream& operator>>(std::istream &in, Claim &c);
+    friend bool operator==(const Claim &c1, const Claim &c2);
 };
+
+namespace day3 {
 
 class Grid : public Rectangle
 {
@@ -48,10 +49,14 @@ public:
     inline const PointMap& operator[](int idx) const { return points[idx]; }
 };
 
+std::vector<Point> getCrossPoints(const Rectangle &r1, const Rectangle &r2);
+Rectangle getGridArea(const std::vector<Claim> &claims);
+
 }
 
 // function prototypes
 void solveDay3();
 
+int getCrossAreaSize(const day3::Grid &grid);
 
 #endif // DAY3_H

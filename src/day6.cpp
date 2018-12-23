@@ -7,11 +7,11 @@ void solveDay6()
     std::array<Point, GL_NUM> coords = fillInCoords();
     printCoords(coords);
 
-    // determine the seek area, which is the covering rectangle
-    Rectangle seekArea = getSeekArea(coords);
+    // determine the grid area, which is the covering rectangle
+    Rectangle gridArea = day6::getGridArea(coords);
 
-    // build up the grid covered by the seek area
-    day6::Grid grid(seekArea);
+    // build up the grid covered by the grid rectangle
+    day6::Grid grid(gridArea);
     //std::cout << grid << '\n';
 
     grid.mapClosestIdx(coords);
@@ -139,26 +139,6 @@ int getRegionSize(const day6::Grid &grid)
     return regionSize;
 }
 
-Rectangle getSeekArea(const std::array<Point, GL_NUM> &coords)
-{
-    Point p1 = coords[0];
-    Point p2 = p1;
-
-    for (const auto &coord : coords)
-    {
-        // find the most left/up corner
-        if ( coord.x < p1.x ) { p1.x = coord.x; }
-        if ( coord.y < p1.y ) { p1.y = coord.y; }
-
-        // find the most right/down corner
-        if ( coord.x > p2.x ) { p2.x = coord.x; }
-        if ( coord.y > p2.y ) { p2.y = coord.y; }
-    }
-
-    return Rectangle(p1, p2);
-}
-
-
 void printCoords(const std::array<Point, GL_NUM> &coords)
 {
     for (const auto &coord : coords)
@@ -259,6 +239,26 @@ std::ostream& operator<<(std::ostream &out, const Grid &g)
     }
 
     return out;
+}
+
+
+Rectangle getGridArea(const std::array<Point, GL_NUM> &coords)
+{
+    Point p1 = coords[0];
+    Point p2 = p1;
+
+    for (const auto &coord : coords)
+    {
+        // find the most left/up corner
+        if ( coord.x < p1.x ) { p1.x = coord.x; }
+        if ( coord.y < p1.y ) { p1.y = coord.y; }
+
+        // find the most right/down corner
+        if ( coord.x > p2.x ) { p2.x = coord.x; }
+        if ( coord.y > p2.y ) { p2.y = coord.y; }
+    }
+
+    return Rectangle(p1, p2);
 }
 
 }

@@ -48,6 +48,7 @@ int getFirstDuplFreq(const std::array<T, size> &changes)
             std::cout << "Cycle restarted! Current freq: " << currFreq << '\n';
         }
     }
+    return 0;
 }
 
 
